@@ -3,10 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_db_connection():
     return mysql.connector.connect(
-        host='your_host',
-        user='your_user',
-        password='your_password',
-        database='your_database'
+        host='LAPTOP-EAAK4H27',
+        user='root',
+        password='sqL32suharta.',
+        database='stocks'
     )
 
 def register_user(username, email, password):
@@ -14,7 +14,7 @@ def register_user(username, email, password):
     connection = get_db_connection()
     cursor = connection.cursor()
     try:
-        cursor.execute('INSERT INTO users (username, email, password) VALUES (%s, %s, %s)',
+        cursor.execute('INSERT INTO user (Username, Email, Password) VALUES (%s, %s, %s)',
                        (username, email, hashed_password))
         connection.commit()
     finally:
@@ -25,9 +25,9 @@ def check_user_credentials(username, password):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     try:
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+        cursor.execute('SELECT * FROM user WHERE Username = %s', (username))
         user = cursor.fetchone()
-        if user and check_password_hash(user['password'], password):
+        if user and check_password_hash(user['Password'], password):
             return True
         else:
             return False
