@@ -1,11 +1,12 @@
-## new code
-
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify, request
 from forms import RegistrationForm, LoginForm
 from models import register_user, check_user_credentials
+from finnhub_integration import setup_finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a real secret key
+finnhub_client = setup_finnhub_client('cen5uf2ad3i22rjjmfg0cen5uf2ad3i22rjjmfgg') 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -26,6 +27,26 @@ def login():
             return jsonify({'message': 'Invalid username or password'})
     return "<p>User successful!</p>"
     #return render_template('login.js', form=form)
+
+@app.route('/api/stock_data/<symbol>/<date>')
+def api_fetch_stock_data(symbol, date):
+    data = fetch_stock_data(finnhub_client, symbol, date)
+    return jsonify(data) if data is not None else jsonify({'error': 'Data not found'})
+
+@app.route('/api/stock_quote/<symbol>')
+def api_get_stock_quote(symbol):
+    quote = get_stock_quote(finnhub_client, symbol)
+    return jsonify(quote)
+
+@app.route('/api/general_news')
+def api_get_general_news():
+    news = get_general_news(finnhub_client)
+    return jsonify(news)
+
+@app.route('/api/technical_indicator/<symbol>/<resolution>/<int:_from>/<int:to>/<indicator>/<int:timeperiod>')
+def api_get_technical_indicator(symbol, resolution, _from, to, indicator, timeperiod):
+    indicator_data = get_technical_indicator(finnhub_client, symbol, resolution, _from, to, indicator, timeperiod)
+    return jsonify(indicator_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
