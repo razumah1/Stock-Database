@@ -13,7 +13,8 @@ def register():
     if request.method == 'POST' and form.validate():
         register_user(form.username.data, form.email.data, form.password.data)
         return jsonify({'message': 'User registered successfully'})
-    return render_template('register.js', form=form)
+    return "<p>User successful!</p>"
+    #render_template('register.js', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -23,7 +24,8 @@ def login():
             return jsonify({'message': 'Login successful'})
         else:
             return jsonify({'message': 'Invalid username or password'})
-    return render_template('login.js', form=form)
+    return "<p>User successful!</p>"
+    #return render_template('login.js', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
