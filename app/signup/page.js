@@ -1,4 +1,4 @@
-
+'use client';
 import { useState } from 'react';
 
 const RegisterPage = () => {
@@ -7,7 +7,7 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/register', {
+      const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

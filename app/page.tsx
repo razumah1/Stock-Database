@@ -1,14 +1,23 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import backgroundImage from './stck.jpg';
+import React from 'react';
+import {fetchData} from './api'
+/*
+const Page = () => {
+const [data, setData] = React.useState([]);
 
-
+  React.useEffect(() => {
+    fetchData().then((data) => setData(data));
+  }, []);
+  return ('../app/login')
+} */
 export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center dark:bg-gray-800" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="min-h-screen flex items-center justify-center dark:bg-gray-800">
         <div className="grid text-center lg:grid-cols-1">
-          
             <a className="group rounded-lg border border-transparent px-5 py-4 mb-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 block"
             
             href="/stocks">
@@ -24,7 +33,7 @@ export default function Home() {
             </a>
           
 
-            <Link legacyBehavior href="/app/login">
+            <Link legacyBehavior href='/login'>
             <a className="group rounded-lg border border-transparent px-5 py-4 mb-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 block">
               <h2 className="mb-3 text-2xl font-semibold">
                 Login{' '}
