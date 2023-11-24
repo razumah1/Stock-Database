@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -35,27 +36,31 @@ if (password != confirmPassword) {
   // Continue with the sign-up process
 
   return (
-    <div>
+    <div className = 'd-flex justify-content-center align-items-center bg-primary vh-100'>
+      <div className = 'bg-white p-3 rounded w-25'>
       <h1>Sign Up</h1>
-      <form>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <br />
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <br />
-        <label>Confirm Password:</label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-
-        <br />
-        <button type="button" onClick={handleSignUp}>
+      <form action=''>
+      <div className='mb-3'>
+        <label htmlFor='name'><strong>Name</strong></label>
+        <input type="text" placeholder="Enter Name" className= 'form-control rounded-0' value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div className='mb-3'>
+        <label htmlFor='email'><strong>Email</strong></label>
+        <input type="email" placeholder="Enter Email" className= 'form-control rounded-0' value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div className='mb-3'>
+        <label htmlFor='password'><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" className= 'form-control rounded-0' value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className='mb-3'>
+        <label htmlFor='confirm password'><strong>Confirm Password</strong></label>
+        <input type="password" placeholder="Confirm Password" className= 'form-control rounded-0' value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <button className='btn-btn-success w-100 rounded-0' type="button" onClick={SignUp}>
           Sign Up
         </button>
       </form>
+      </div>
     </div>
     );
 };

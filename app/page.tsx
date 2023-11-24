@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import backgroundImage from './stck.jpg';
 import React from 'react';
-import {fetchData} from './api'
+import {fetchData} from './api';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 /*
 const Page = () => {
 const [data, setData] = React.useState([]);
