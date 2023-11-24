@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
 from forms import RegistrationForm, LoginForm
 from models import register_user, check_user_credentials
-from finnhub_integration import finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator
+from finnhub_integration import setup_finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator
 from secret import api_key
 
 app = Flask(__name__)
+finnhub_client = setup_finnhub_client('cen5uf2ad3i22rjjmfg0cen5uf2ad3i22rjjmfgg') 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

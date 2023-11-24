@@ -3,8 +3,6 @@ import pandas as pd
 from datetime import datetime
 from secret import api_key
 
-
-
 def setup_finnhub_client(api_key):
     return finnhub.Client(api_key=api_key)
 
