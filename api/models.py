@@ -3,10 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_db_connection():
     return mysql.connector.connect(
-        host='',
-        user='',
-        password='.',
-        database=''
+        host=' aws.connect.psdb.cloud',
+        user='s14qt32ovhjet1db9emd',
+        password='pscale_pw_dNPmYdRidc3nAB4hXJS5UIAsEiivOuO0IvKGYLXwxdn',
+        database='stock_website'
     )
 
 def register_user(username, email, password):
