@@ -21,7 +21,7 @@ export default function Home() {
         <div className="grid text-center lg:grid-cols-1">
             <a className="group rounded-lg border border-transparent px-5 py-4 mb-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 block"
             
-            href="/stocks">
+            href="/stock">
               <h2 className="mb-3 text-2xl font-semibold">
                 Stock Prices{' '}
                 <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">

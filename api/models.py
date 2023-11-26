@@ -3,10 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_db_connection():
     return mysql.connector.connect(
-        host='LAPTOP-EAAK4H27',
-        user='root',
-        password='sqL32suharta.',
-        database='stocks'
+        host='',
+        user='',
+        password='.',
+        database=''
     )
 
 def register_user(username, email, password):
