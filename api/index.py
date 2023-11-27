@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, request
 from forms import RegistrationForm, LoginForm
-from models import register_user, check_user_credentials
-from finnhub_integration import setup_finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator
+from models import register_user, check_user_credentials, get_db_connection
+from finnhub_integration import setup_finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator, stock_description,stock_eps, stock_basicfinancials, stock_EPSdate
 from secret import api_key
+from flask_cors import CORS
 
 app = Flask(__name__)
-finnhub_client = setup_finnhub_client('cen5uf2ad3i22rjjmfg0cen5uf2ad3i22rjjmfgg') 
-
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+finnhub_client = setup_finnhub_client(api_key) 
+app.config['SECRET_KEY'] = 'any secret string'
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
@@ -16,14 +18,8 @@ def register():
     return "<p>User successful!</p>"
     #render_template('register.js', form=form)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
-        if check_user_credentials(form.username.data, form.password.data):
-            return jsonify({'message': 'Login successful'})
-        else:
-            return jsonify({'message': 'Invalid username or password'})
+
+
     return "<p>User successful!</p>"
     #return render_template('login.js', form=form)
 
@@ -35,7 +31,22 @@ def api_fetch_stock_data(symbol, date):
 @app.route('/api/stock_quote/<symbol>')
 def api_get_stock_quote(symbol):
     quote = get_stock_quote(finnhub_client, symbol)
-    return jsonify(quote)
+    descript = stock_description(finnhub_client,symbol)
+    EPS = stock_eps(finnhub_client,symbol)
+    PE = stock_basicfinancials(finnhub_client,symbol)
+    date = stock_EPSdate(finnhub_client, symbol)
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    # (symbol, round(quote['c'],2),descript['result'][0]['description']))
+    #date['earningsCalendar'][0]['date']
+    '''try:
+        cursor.execute('INSERT INTO fundamentalanalysis (PERatio, EPS, MarketCap, Symbol) VALUES (%s, %s, %s, %s)',
+                       (PE['metric']['peAnnual'], EPS[0]['actual'], round(PE['metric']['marketCapitalization']),symbol))
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()'''
+    return jsonify(PE['metric'])
 
 @app.route('/api/general_news')
 def api_get_general_news():
@@ -52,7 +63,6 @@ if __name__ == '__main__':
 
 
 '''
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)'''

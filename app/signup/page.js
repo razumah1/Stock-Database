@@ -6,6 +6,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
 
 
   const handleSignUp = async () => {
@@ -13,7 +14,7 @@ const SignUp = () => {
   console.log('Signing up with:', email, password);
 
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch('http://127.0.0.1:5328/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,11 +28,6 @@ const SignUp = () => {
       console.error('Error registering user:', error);
     }
   };
- /*Check if the passwords match
-if (password != confirmPassword) {
-  alert('Passwords do not match');
-  return;
-};*/
 
   // Continue with the sign-up process
 
@@ -42,7 +38,7 @@ if (password != confirmPassword) {
       <form action=''>
       <div className='mb-3'>
         <label htmlFor='name'><strong>Name</strong></label>
-        <input type="text" placeholder="Enter Name" className= 'form-control rounded-0' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" placeholder="Enter Name" className= 'form-control rounded-0' value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className='mb-3'>
         <label htmlFor='email'><strong>Email</strong></label>
@@ -54,7 +50,7 @@ if (password != confirmPassword) {
         </div>
         <div className='mb-3'>
         <label htmlFor='confirm password'><strong>Confirm Password</strong></label>
-        <input type="password" placeholder="Confirm Password" className= 'form-control rounded-0' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Confirm Password" className= 'form-control rounded-0' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         </div>
         <button className='btn-btn-success w-100 rounded-0' type="button" onClick={SignUp}>
           Sign Up

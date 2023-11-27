@@ -1,12 +1,12 @@
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from secret import database_pw, database_username
 def get_db_connection():
     return mysql.connector.connect(
-        host='',
-        user='',
-        password='.',
-        database=''
+        host='aws.connect.psdb.cloud',
+        user= database_username,
+        password=database_pw,
+        database='stock_website'
     )
 
 def register_user(username, email, password):

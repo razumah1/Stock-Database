@@ -29,3 +29,11 @@ def get_general_news(client):
 
 def get_technical_indicator(client, symbol, resolution, _from, to, indicator, timeperiod):
     return client.technical_indicator(symbol=symbol, resolution=resolution, _from=_from, to=to, indicator=indicator, indicator_fields={"timeperiod": timeperiod})
+def stock_description(client, symbol):
+    return client.symbol_lookup(symbol)
+def stock_eps(client,symbol):
+    return client.company_earnings(symbol, limit=1)
+def stock_basicfinancials(client,symbol):
+    return client.company_basic_financials(symbol, 'all')
+def stock_EPSdate(client, symbol):
+    return client.earnings_calendar(_from="2024-01-01", to="2024-01-30", symbol=symbol, international=False)
