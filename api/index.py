@@ -8,8 +8,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 finnhub_client = setup_finnhub_client(api_key) 
-app.config['SECRET_KEY'] = 'any secret string'
+app.config['SECRET_KEY'] = 'any secret string' ## what is this
+
+
 @app.route('/register', methods=['GET', 'POST'])
+
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -18,10 +21,24 @@ def register():
     return "<p>User successful!</p>"
     #render_template('register.js', form=form)
 
+@app.route('/api/stocks', methods=['GET'])
+def get_all_stocks():
+    # Example function that you need to implement
+    stock_data = retrieve_all_stocks_from_database()
+    return jsonify(stock_data)
 
+def retrieve_all_stocks_from_database():
+    # Connect to your database and fetch all stock data
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        cursor.execute('SELECT * FROM stock')  # Assuming you have a table named 'stocks'
+        stocks = cursor.fetchall()
+        return stocks  # This will be a list of dictionaries
+    finally:
+        cursor.close()
+        connection.close()
 
-    return "<p>User successful!</p>"
-    #return render_template('login.js', form=form)
 
 @app.route('/api/stock_data/<symbol>/<date>')
 def api_fetch_stock_data(symbol, date):
@@ -61,8 +78,3 @@ def api_get_technical_indicator(symbol, resolution, _from, to, indicator, timepe
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-'''
-
-app = Flask(__name__)
-CORS(app)'''

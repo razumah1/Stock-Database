@@ -14,7 +14,7 @@ def get_db_connection():
 def print_stocks_from_db():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM stock')  # Replace with your actual table name
+    cursor.execute('SELECT * FROM stock') 
     stocks = cursor.fetchall()
     for stock in stocks:
         print(stock)
