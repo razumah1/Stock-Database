@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const StockList = () => {
   const [stocks, setStocks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        // Replace with the endpoint that returns the list of stocks from your Flask backend
         const response = await fetch('http://localhost:5328/api/stocks');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -23,11 +23,24 @@ const StockList = () => {
     fetchStockData();
   }, []);
 
+  // Filter stocks based on search term
+  const filteredStocks = stocks.filter(stock =>
+    stock.CompanyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    stock.Symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container mt-5">
       <h1>Stocks</h1>
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search stocks..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <div className="list-group">
-        {stocks.map((stock, index) => (
+        {filteredStocks.map((stock, index) => (
           <a key={index} href={`/stock/${stock.Symbol}`} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             <div>
               <h5>{stock.CompanyName}</h5>
