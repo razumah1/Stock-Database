@@ -1,6 +1,8 @@
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
-from secret import database_pw, database_username
+from secret import DB_PASS as database_pw, DB_USER as database_username
+
+
 def get_db_connection():
     return mysql.connector.connect(
         host='aws.connect.psdb.cloud',
