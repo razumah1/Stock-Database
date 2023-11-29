@@ -34,7 +34,7 @@ export default function Home() {
             </a>
           
 
-            <Link legacyBehavior href='/login'>
+            <Link legacyBehavior href='http://127.0.0.1:5328/login'>
             <a className="group rounded-lg border border-transparent px-5 py-4 mb-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 block">
               <h2 className="mb-3 text-2xl font-semibold">
                 Login{' '}
@@ -51,7 +51,7 @@ export default function Home() {
 
             
             <a className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 block"
-            href="/signup">
+            href="http://127.0.0.1:5328/register">
               <h2 className="mb-3 text-2xl font-semibold">
                 Signup{' '}
                 <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">

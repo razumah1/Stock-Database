@@ -1,25 +1,53 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, redirect, url_for, flash, render_template
 from forms import RegistrationForm, LoginForm
-from models import register_user, check_user_credentials, get_db_connection
+from models import register_user, check_user_credentials, get_db_connection, User
 from finnhub_integration import setup_finnhub_client, fetch_stock_data, get_stock_quote, get_general_news, get_technical_indicator, stock_description,stock_eps, stock_basicfinancials, stock_EPSdate
 from secret import api_key
+from flask_login import login_user, current_user, LoginManager
 from flask_cors import CORS
 
+
 app = Flask(__name__)
+login_manager = LoginManager(app)
+app.app_context().push()
+login_manager.login_view = "login"
+
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 finnhub_client = setup_finnhub_client(api_key) 
 app.config['SECRET_KEY'] = 'any secret string' ## what is this
-
+@login_manager.user_loader
+def load_user(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM user WHERE id = %s", (user_id,))
+    user_record = cursor.fetchone()
+    if user_record: 
+        user = User(user_record[0],user_record[1],user_record[3])
+        return user
+    else: return None
+@app.route('/')
+def home_page():
+    return redirect('http://localhost:3000/')
 
 @app.route('/register', methods=['GET', 'POST'])
-
 def register():
-    form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
-        register_user(form.username.data, form.email.data, form.password.data)
-        return jsonify({'message': 'User registered successfully'})
-    return "<p>User successful!</p>"
-    #render_template('register.js', form=form)
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        register_user(form.name.data, form.email.data, form.password.data)
+        return redirect('http://localhost:3000/stock')
+    return render_template('register.html', form = form, current_page='register')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user_details = check_user_credentials(form.email.data, form.password.data)
+        if user_details:
+            user = User(**user_details)
+            login_user(user)
+            return redirect('http://localhost:3000/stock')
+        else:
+            flash('Username or password is incorrect.',category='danger')
+    return render_template('login.html', form = form, current_page='login')
 
 @app.route('/api/stocks', methods=['GET'])
 def get_all_stocks():
