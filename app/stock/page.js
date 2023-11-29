@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const StockList = () => {
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterTerm, setFilterTerm] = useState('');
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -26,8 +27,9 @@ const StockList = () => {
   // Filter stocks based on search term
   const filteredStocks = stocks.filter(stock =>
     stock.CompanyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    stock.Symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    stock.Symbol.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const filterOptions = ['Price', 'Positive EPS', 'Market Cap']; // Replace with your actual filter options
 
   return (
     <div className="container mt-5">
@@ -39,6 +41,16 @@ const StockList = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+       <select
+          className="form-control"
+          value={filterTerm}
+          onChange={(e) => setFilterTerm(e.target.value)}
+        >
+          <option value="">Filter by...</option>
+          {filterOptions.map((option,index) => (
+            <option key ={index} value={option}> {option} </option>
+          ))}
+        </select>
       <div className="list-group">
         {filteredStocks.map((stock, index) => (
           <a key={index} href={`/stock/${stock.Symbol}`} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">

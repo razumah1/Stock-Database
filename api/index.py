@@ -36,6 +36,7 @@ def register():
         register_user(form.name.data, form.email.data, form.password.data)
         return redirect('http://localhost:3000/stock')
     return render_template('register.html', form = form, current_page='register')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
