@@ -56,12 +56,31 @@ def get_all_stocks():
     stock_data = retrieve_all_stocks_from_database()
     return jsonify(stock_data)
 
+@app.route('/api/stockMoreInfo', methods=['GET'])
+def get_info_stocks():
+    # Example function that you need to implement
+    stock_data = retrieve_basic_info_from_database()
+    return jsonify(stock_data)
+
 def retrieve_all_stocks_from_database():
     # Connect to your database and fetch all stock data
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     try:
         cursor.execute('SELECT * FROM stock')  # Assuming you have a table named 'stocks'
+        stocks = cursor.fetchall()
+        return stocks  # This will be a list of dictionaries
+    finally:
+        cursor.close()
+        connection.close()
+        
+# EPS, MarketCap, PE Ratio, Earnings Date
+def retrieve_basic_info_from_database():
+    # Connect to your database and fetch all stock data
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        cursor.execute('SELECT fundamentalanalysis.Symbol, stock.Price, fundamentalanalysis.MarketCap, fundamentalanalysis.EPS FROM fundamentalanalysis JOIN stock ON stock.Symbol = fundamentalanalysis.Symbol')  # Assuming you have a table named 'stocks'
         stocks = cursor.fetchall()
         return stocks  # This will be a list of dictionaries
     finally:
