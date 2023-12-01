@@ -7,9 +7,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const StockList = () => {
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterTerm, setFilterTerm] = useState('');
+  const [filterTerm, setFilterTerm] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const[selectedFilter, setSelectedFilter] = useState(null);
+  const [filteredStocks, setFilteredStocks] = useState([]);
+
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -28,6 +31,51 @@ const StockList = () => {
     fetchStockData();
   }, []);
 
+  const filteredStocksbySearch = stocks.filter((stock) =>
+    stock.CompanyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    stock.Symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  ).filter((stock) => {
+    const stockPrice = parseFloat(stock.Price);
+    return stockPrice >= priceRange[0] && stockPrice <= priceRange[1];
+  });
+
+  useEffect(() => {
+    const fetchBasicInfo = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5328/api/stockMoreInfo');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setFilterTerm(data);
+      } catch (error) {
+        console.error("Could not fetch stock data:", error);
+      }
+    };
+
+    fetchBasicInfo();
+  }, []);
+
+  useEffect(() => {
+    if (selectedFilter === 'EPS') {
+      const filteredStocksByEPS = filterTerm.filter((filter) => {
+        const stockEPS = parseFloat(filter.EPS);
+        return stockEPS >= 0;
+      });
+      setFilteredStocks(filteredStocksByEPS);
+    } else if (selectedFilter === 'MarketCap') {
+      const sortedStocksByMarketCap = [...filterTerm].sort((a, b) => {
+        const stockMarketCapA = parseFloat(a.MarketCap);
+        const stockMarketCapB = parseFloat(b.MarketCap);
+        return stockMarketCapA - stockMarketCapB;
+      });
+      setFilteredStocks(sortedStocksByMarketCap);
+    }
+    else {
+      setFilteredStocks(stocks);
+    }
+  },[selectedFilter,stocks,filterTerm]);
+
   const addToWatchlist = (symbol) => {
     if (!watchlist.includes(symbol)) {
       setWatchlist([...watchlist, symbol]);
@@ -38,22 +86,10 @@ const StockList = () => {
     const updatedWatchlist = watchlist.filter((stockSymbol) => stockSymbol !== symbol);
     setWatchlist(updatedWatchlist);
   };
-
-  const filteredStocks = stocks.filter((stock) =>
-    stock.CompanyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    stock.Symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  ).filter((stock) => {
-    const stockPrice = parseFloat(stock.Price);
-    return stockPrice >= priceRange[0] && stockPrice <= priceRange[1];
-  });
-
-  const filterOptions = ['Positive EPS', 'Market Cap'];
-
   return (
     <div className="dark:bg-blue-500">
       <nav class="navbar navbar-expand-md navbar-dark bg-blue-500 justify-content-center">
 	        <a class="navbar-brand" href="/">StockHub</a>
-          <a class="nav-link" href="/watchlist">Watchlist</a>
 	      	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
 	        	<span class="navbar-toggler-icon"></span>
 	      	</button>
@@ -74,19 +110,14 @@ const StockList = () => {
         value={priceRange[1]}
         onChange={(e) => setPriceRange([priceRange[0], parseFloat(e.target.value)])}
       />
-      <select
-        className="form-control mb-3"
-        value={filterTerm}
-        onChange={(e) => setFilterTerm(e.target.value)}
-      >
-        <option value="">Filter by...</option>
-        {filterOptions.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+        <label>Filter By: </label>
+        <select onChange={(e) => setSelectedFilter(e.target.value)}>
+          <option value = "">Select an option</option>
+          <option value="EPS">EPS</option>
+          <option value="MarketCap">Market Cap</option>
+        </select>
       <div className="list-group">
+
         {filteredStocks.map((stock, index) => (
           <div
             key={index}
