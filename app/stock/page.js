@@ -118,7 +118,7 @@ const StockList = () => {
         </select>
       <div className="list-group">
 
-        {filteredStocks.map((stock, index) => (
+        {filteredStocksbySearch.map((stock, index) => (
           <div
             key={index}
             className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
